@@ -26,6 +26,9 @@ package mx.dbas.odissey;
 // Imports the Google Cloud client library
 import android.annotation.TargetApi;
 import android.os.Build;
+import android.speech.tts.TextToSpeech;
+import android.support.annotation.RequiresApi;
+
 
 import com.google.cloud.automl.v1beta1.AnnotationPayload;
 import com.google.cloud.automl.v1beta1.ExamplePayload;
@@ -37,9 +40,12 @@ import com.google.protobuf.ByteString;
 
 import java.io.IOException;
 import java.io.PrintStream;
+import java.lang.reflect.Array;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.LinkedList;
 import java.util.Map;
 
 import net.sourceforge.argparse4j.ArgumentParsers;
@@ -56,6 +62,7 @@ import net.sourceforge.argparse4j.inf.Subparsers;
  */
 public class PredictionApi {
 
+
     // [START automl_vision_predict]
 
     /**
@@ -69,6 +76,7 @@ public class PredictionApi {
      *     scoreThreshold are displayed.
      * @throws IOException on Input/Output errors.
      */
+
     @TargetApi(Build.VERSION_CODES.O)
     public static void predict(
             String projectId,
@@ -77,6 +85,9 @@ public class PredictionApi {
             String filePath,
             String scoreThreshold)
             throws IOException {
+
+        LinkedList<String> casesName = new LinkedList<String>();
+        LinkedList<Float> casesPer = new LinkedList<Float>();
 
         // Instantiate client for prediction service.
         PredictionServiceClient predictionClient = PredictionServiceClient.create();
@@ -100,9 +111,33 @@ public class PredictionApi {
         System.out.println("Prediction results:");
         for (AnnotationPayload annotationPayload : response.getPayloadList()) {
             System.out.println("Predicted class name :" + annotationPayload.getDisplayName());
-            System.out.println(
-                    "Predicted class score :" + annotationPayload.getClassification().getScore());
+            System.out.println("Predicted class score :" + annotationPayload.getClassification().getScore());
+            casesName.add(annotationPayload.getDisplayName());
+            casesPer.add(annotationPayload.getClassification().getScore());
         }
+
+        String mayorN=casesName.get(0);
+        Float mayorP=casesPer.get(0);
+
+        for(int i=1;i<casesName.size();i++){
+            String menorN=casesName.get(i);
+            Float menorP=casesPer.get(i);
+
+            if(menorP>mayorP){
+                mayorN=menorN;
+                mayorP=menorP;
+            }
+
+        }
+
+        Text t1=new Text();
+        if(mayorN.equals("Obstaculo") || mayorN.equals("Persona")){
+            t1.speak("be careful");
+        }else if(mayorN.equals("Pasillo")|| mayorN.equals("Intersección")){
+            t1.speak("be careful");
+
+        }
+
     }
     // [END automl_vision_predict]
 
@@ -111,6 +146,7 @@ public class PredictionApi {
         predictionApi.argsHelper(args, System.out);
     }
 
+    @TargetApi(Build.VERSION_CODES.O)
     public static void argsHelper(String[] args, PrintStream out) throws IOException {
         ArgumentParser parser =
                 ArgumentParsers.newArgumentParser("PredictionApi")

@@ -16,13 +16,6 @@
         android:layout_marginTop="0dp"
         app:srcCompat="@drawable/menu" />
 
-    <ImageButton
-        android:id="@+id/imageButton2"
-        android:layout_width="67dp"
-        android:layout_height="62dp"
-        android:background="@null"
-        app:srcCompat="@drawable/botonmenu" />
-
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
@@ -69,5 +62,14 @@
         android:layout_marginTop="208dp"
         android:layout_marginEnd="157dp"
         android:text="Ir" />
+
+    <VideoView
+        android:id="@+id/videoView"
+        android:layout_width="319dp"
+        android:layout_height="298dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="46dp"
+        android:layout_marginBottom="83dp" />
 
 </RelativeLayout>

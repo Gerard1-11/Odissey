@@ -16,10 +16,7 @@ public class Visor {
 
     public void main(String[] args){
 
-
         prediction(filePath);
-
-
 
     }
 

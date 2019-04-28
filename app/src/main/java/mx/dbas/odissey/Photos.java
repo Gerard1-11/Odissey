@@ -17,11 +17,12 @@ import static android.support.v4.app.ActivityCompat.*;
 
 public class Photos {
     static final int REQUEST_TAKE_PHOTO = 1;
+    Context context;
 
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+        if (takePictureIntent.resolveActivity(context.getPackageManager()) != null) {
             // Create the File where the photo should go
             File photoFile = null;
             try {
@@ -46,7 +47,7 @@ public class Photos {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
                 imageFileName,  /* prefix */
                 ".jpg",         /* suffix */
